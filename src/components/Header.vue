@@ -1,64 +1,68 @@
 <template>
-<div class="container-fluid" style="padding: 0; background:#3587dac2;"> 
-<div class="d-flex justify-content-center">
-  
-  <!-- <div class="container-fluid"> 
-    <div class="row"> -->
-        <!--
+  <div class="container-fluid" style="padding: 0; background:#3587dac2;">
+    <div class="row">
       <div class="col">
         <b-icon
-          icon="paperclip"
-          scale="6"
-          rotate="45"
-          color="blue"
-          flip-h="true"
-          shift-v="3"
-          shift-h="0"
-        >
-        </b-icon>
+          icon="dice5-fill"
+          aria-hidden="true"
+          scale="2"
+          variant="white"
+          shift-h="-7"
+          shift-v="-6"
+        ></b-icon>
+        <b-icon
+          icon="dice1-fill"
+          aria-hidden="true"
+          scale="2"
+          variant="white"
+          shift-h="10"
+          shift-v="-6"
+        ></b-icon>
       </div>
-      -->
-        <div class="col">
-          <b-iconstack font-scale="2">
-            <b-icon stacked icon="square"></b-icon>
-            <b-icon stacked icon="dot" shift-h="-3" shift-v="4"></b-icon>
-            <b-icon stacked icon="dot" shift-h="-3"></b-icon>
-            <b-icon stacked icon="dot" shift-h="-3" shift-v="-4"></b-icon>
-            <b-icon stacked icon="dot" shift-h="3" shift-v="4"></b-icon>
-            <b-icon stacked icon="dot" shift-h="3"></b-icon>
-            <b-icon stacked icon="dot" shift-h="3" shift-v="-4"></b-icon>
-          </b-iconstack>
-          <b-iconstack font-scale="2" rotate="70">
-            <b-icon stacked icon="square"></b-icon>
-            <b-icon stacked icon="dot" shift-h="-3" shift-v="4"></b-icon>
-            <b-icon stacked icon="dot" shift-h="-3" shift-v="-4"></b-icon>
-            <b-icon stacked icon="dot" shift-h="0" shift-v="0"></b-icon>
-            <b-icon stacked icon="dot" shift-h="3" shift-v="4"></b-icon>
-            <b-icon stacked icon="dot" shift-h="3" shift-v="-4"></b-icon>
-          </b-iconstack>
-          <b-iconstack font-scale="2" rotate="75">
-            <b-icon stacked icon="square"></b-icon>
-            <b-icon stacked icon="dot" shift-h="-3" shift-v="4"></b-icon>
-            <b-icon stacked icon="dot" shift-h="-3" shift-v="-4"></b-icon>
-            <b-icon stacked icon="dot" shift-h="3" shift-v="4"></b-icon>
-            <b-icon stacked icon="dot" shift-h="3" shift-v="-4"></b-icon>
-          </b-iconstack>
-        </div>
-        <div class="col">
-          <h4>{{ titulo }}</h4>
-        </div>
-        <div class="col">
-          <b-button>
-            <b-icon icon="question-circle"> </b-icon>
-          </b-button>
-        </div>
+      <div class="col">
+        <h4 style="color: white;">
+          <strong>{{ titulo }}</strong>
+        </h4>
       </div>
-      <div class="row">
-
-      <div>  
-     </div>
- <!--  </div> -->
- 
+      <div class="col">
+        <b-button v-b-toggle.collapse-menu variant="primary"
+          ><b-icon icon="list" aria-hidden="true"></b-icon
+        ></b-button>
+        <b-collapse id="collapse-menu" class="mt-2">
+          <div class="row">
+            <b-button
+              v-on:click="nuevoJuego"
+              v-b-toggle.collapse-menu
+              block
+              variant="primary"
+              size="sm"
+              >Nuevo juego</b-button
+            >
+          </div>
+          <div class="row">
+            <b-button v-b-toggle.collapse-menu block variant="primary" size="sm"
+              >Ordenar
+            </b-button>
+          </div>
+          <div class="row">
+            <b-button
+              block
+              v-b-toggle="['collapse-menu', 'collapse-parciales']"
+              variant="primary"
+              size="sm"
+              aria-expanded="true"
+              >Mostrar parciales
+            </b-button>
+          </div>
+          <div class="row">
+            <b-button v-b-toggle.collapse-menu block variant="primary" size="sm"
+              >Instrucciones
+            </b-button>
+          </div>
+        </b-collapse>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -69,7 +73,12 @@ export default {
     };
   },
   props: ["titulo"],
-  methods: {}
+  methods: {
+    nuevoJuego: function() {
+      this.$emit("nuevoJuego");
+      console.log("header nuevo juego");
+    }
+  },
 };
 </script>
 
@@ -78,6 +87,18 @@ export default {
   padding: 0;
   margin-left: 0;
   margin-right: 0;
-  background: #3587dac2;
+  background: #3588dae1;
+}
+
+.col {
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.row {
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
 }
 </style>

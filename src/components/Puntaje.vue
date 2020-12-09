@@ -1,12 +1,13 @@
 <template >
   <div class="container">
-    <b-button pill variant="light" id="show-btn" @click="showModal">
-      <b-icon icon="pencil" aria-hidden="true"></b-icon
-    ></b-button>
+    <button type="button" class="btn btn-outline-primary btn-sm" @click="showModal">
+      <b-icon icon="pencil-fill" variant="info"></b-icon
+    ></button>
+   
 
     <b-modal ref="puntos-modal" hide-footer>
-      <div class="row">
-        <h3> <b-avatar variant="info"></b-avatar> Sumar puntos a {{ nombreJugador }} </h3>
+      <div class="col" style="text-align: center;">
+        <h3 style="text-align: center">Sumar puntos a {{ nombreJugador }}</h3>
       </div>
       <div class="d-block text-center">
         <form ref="form" @submit.stop.prevent="handleSubmit">
@@ -21,6 +22,8 @@
               type="number"
               :state="puntosState"
               required
+              size="lg"
+  
             ></b-form-input>
           </b-form-group>
         </form>
@@ -62,9 +65,6 @@
 
         <div class="row" style="align: center">
           <div class="col">
-            <!-- <button class="btn btn-outline-danger" v-on:click="borrar()">
-            Borrar
-          </button> -->
             <b-button
               class="mt-3"
               variant="outline-danger"
@@ -92,7 +92,7 @@
 <script>
 export default {
   name: "Puntaje",
-  props: ["nombreJugador","habilitado"],
+  props: ["nombreJugador"],
   data() {
     return {
       puntosum: null,
@@ -133,3 +133,4 @@ export default {
   }
 };
 </script>
+

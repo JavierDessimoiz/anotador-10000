@@ -1,31 +1,38 @@
 <template>
-  <div>
-                                       
-    <b-form @submit.stop.prevent="onSubmit">
-      <b-form-group id=" input-group-1" label="Nombre del jugador" label-for=" input-1">
-        <b-form-input
-          id=" input-1"
-          name=" input-1"
-          v-model="$v.jugadorInicializado.nombre.$model"
-          :state="validateState('nombre')"
-          aria-describedby="input-1-live-feedback"
-        ></b-form-input>
+  <div class="container-fluid">
 
-        <b-form-invalid-feedback
-          id="input-1-live-feedback"
-        >Nombre requerido con un mínimo de 3 caracteres .</b-form-invalid-feedback>
-      </b-form-group>
+        <b-form @submit.stop.prevent="onSubmit">
+          <b-form-group
+            id=" input-group-1"
+            label-for=" input-1"
+          >
+            <b-form-input
+              id=" input-1"
+              name=" input-1"
+              v-model="$v.jugadorInicializado.nombre.$model"
+              :state="validateState('nombre')"
+              aria-describedby="input-1-live-feedback"
+              placeholder="Nombre del jugador"
+            ></b-form-input>
+            <b-form-invalid-feedback id="input-1-live-feedback"
+              >Nombre requerido con un mínimo de 3 caracteres
+              .</b-form-invalid-feedback
+            >
+          </b-form-group>
 
-      <b-button type="submit" variant="primary">Agregar jugador</b-button>
-      <b-button class="ml-2" @click="resetForm()">Limpiar</b-button>
-    </b-form>
+          <b-button
+            class="btn btn-primary btn-sm"
+            type="submit"
+            variant="primary"
+            >Agregar jugador <b-icon icon="arrow-down" color: white> </b-icon> </b-button
+          >
+          <b-button class="btn btn-primary btn-sm" @click="resetForm()"
+            >Limpiar</b-button
+          >
+        </b-form>
 
   </div>
 </template>
-
-<style>
-
-</style>
 
 <script>
 import { validationMixin } from "vuelidate";
@@ -37,7 +44,7 @@ export default {
     return {
       jugadorInicializado: {
         nombre: null,
-        puntos:0
+        puntos: 0
       }
     };
   },
@@ -61,7 +68,7 @@ export default {
     resetForm() {
       this.jugadorInicializado = {
         nombre: null,
-        puntos:0
+        puntos: 0
       };
 
       this.$nextTick(() => {
@@ -78,3 +85,31 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.container-fluid {
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+  background-color: #1855c7;
+}
+
+.border-primary {
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+  background: #f2f2f2;
+}
+
+.col {
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.row {
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+</style>
