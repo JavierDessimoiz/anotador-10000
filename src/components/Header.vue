@@ -76,7 +76,6 @@ export default {
   methods: {
     nuevoJuego: function() {
       this.$emit("nuevoJuego");
-      console.log("header nuevo juego");
     }
   },
 };

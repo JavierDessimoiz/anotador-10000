@@ -1,7 +1,6 @@
 <template>
   <div class="container-fluid">
     <Header titulo="Diez mil" />
-    <button v-on:click="agregarHistorialPosiciones">posiciones</button>
     <!-- Comienzo -->
     <div v-if="comienzaElJuego === false">
       <b-button
