@@ -1,36 +1,39 @@
 <template>
   <div class="container-fluid">
+    <b-form @submit.stop.prevent="onSubmit">
+      <b-form-group id=" input-group-1" label-for=" input-1">
+        
+        <!--<b-form-input
+          id="nombre"
+          name="nombre"
+          type="text"
+          v-model="$v.jugadorInicializado.nombre.$model"
+          :state="validateState('nombre')"
+          aria-describedby="input-1-live-feedback"
+          placeholder="Nombre del jugador"
+        ></b-form-input>-->
 
-        <b-form @submit.stop.prevent="onSubmit">
-          <b-form-group
-            id=" input-group-1"
-            label-for=" input-1"
-          >
-            <b-form-input
-              id=" input-1"
-              name=" input-1"
-              v-model="$v.jugadorInicializado.nombre.$model"
-              :state="validateState('nombre')"
-              aria-describedby="input-1-live-feedback"
-              placeholder="Nombre del jugador"
-            ></b-form-input>
-            <b-form-invalid-feedback id="input-1-live-feedback"
-              >Nombre requerido con un mínimo de 3 caracteres
-              .</b-form-invalid-feedback
-            >
-          </b-form-group>
+         <input
+          id="nombre"
+          name="nombre"
+          type="text"
+          v-model="jugadorInicializado.nombre"
+          placeholder="Nombre del jugador"
+        >
 
-          <b-button
-            class="btn btn-primary btn-sm"
-            type="submit"
-            variant="primary"
-            >Agregar jugador <b-icon icon="arrow-down" color: white> </b-icon> </b-button
-          >
-          <b-button class="btn btn-primary btn-sm" @click="resetForm()"
-            >Limpiar</b-button
-          >
-        </b-form>
+        <b-form-invalid-feedback id="input-1-live-feedback"
+          >Nombre requerido con un mínimo de 3 caracteres
+          .</b-form-invalid-feedback
+        >
+      </b-form-group>
 
+      <b-button class="btn btn-primary btn-sm" type="submit" variant="primary"
+        >Agregar jugador</b-button
+      >
+      <b-button class="btn btn-primary btn-sm" @click="resetForm()"
+        >Limpiar</b-button
+      >
+    </b-form>
   </div>
 </template>
 
@@ -44,11 +47,12 @@ export default {
     return {
       jugadorInicializado: {
         nombre: null,
-        puntos: 0
+        puntos: 0,
       }
     };
   },
   validations: {
+    
     jugadorInicializado: {
       nombre: {
         required,

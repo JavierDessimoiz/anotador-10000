@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Juego from './components/Juego'
+import Juego from './components/Juego';
 
 export default {
   name: 'App',

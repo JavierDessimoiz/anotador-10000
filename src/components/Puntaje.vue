@@ -5,9 +5,9 @@
     ></button>
    
 
-    <b-modal ref="puntos-modal" hide-footer>
+    <b-modal ref="puntos-modal" hide-footer hide-header>
       <div class="col" style="text-align: center;">
-        <h3 style="text-align: center">Sumar puntos a {{ nombreJugador }}</h3>
+        <h5 style="text-align: center">Sumar puntos a {{ nombreJugador }}</h5>
       </div>
       <div class="d-block text-center">
         <form ref="form" @submit.stop.prevent="handleSubmit">

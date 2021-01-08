@@ -1,5 +1,6 @@
 <template>
-  <div class="contenedor">
+
+  <div v-if="sumar" class="container">
       <Puntaje
         @controlarPuntaje="controlarPuntaje"
         v-bind:nombreJugador="this.jugador.nombre"
@@ -18,7 +19,7 @@ export default {
       this.$emit("controlarPuntaje", this.jugador.puntos);
     }
   },
-  props: ["jugador"],
+  props: ["jugador","sumar"],
   components: {
     Puntaje
   }

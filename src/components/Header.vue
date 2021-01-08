@@ -40,8 +40,12 @@
             >
           </div>
           <div class="row">
-            <b-button v-b-toggle.collapse-menu block variant="primary" size="sm"
-              >Ordenar
+            <b-button
+              v-b-toggle="['collapse-menu', 'sidebar-right']"
+              block
+              variant="primary"
+              size="sm"
+              >Mostrar posiciones
             </b-button>
           </div>
           <div class="row">
@@ -52,6 +56,17 @@
               size="sm"
               aria-expanded="true"
               >Mostrar parciales
+            </b-button>
+          </div>
+          <div class="row">
+            <b-button
+              block
+              v-b-toggle="['collapse-menu', 'collapse-chart']"
+              v-on:click="genChart"
+              variant="primary"
+              size="sm"
+              aria-expanded="true"
+              >Gráfico posiciones
             </b-button>
           </div>
           <div class="row">
@@ -76,8 +91,11 @@ export default {
   methods: {
     nuevoJuego: function() {
       this.$emit("nuevoJuego");
+    },
+    genChart: function() {
+      this.$emit("genChart");
     }
-  },
+  }
 };
 </script>
 

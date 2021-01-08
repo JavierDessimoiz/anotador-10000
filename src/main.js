@@ -11,6 +11,9 @@ Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 // Bootstrap
+ 
+//chart
+//import Chart from 'chart.js';
 
 
 Vue.config.productionTip = false
