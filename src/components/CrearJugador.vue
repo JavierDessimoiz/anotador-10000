@@ -26,13 +26,19 @@
           .</b-form-invalid-feedback
         >
       </b-form-group>
-
-      <b-button class="btn btn-primary btn-sm" type="submit" variant="primary"
-        >Agregar jugador</b-button
-      >
-      <b-button class="btn btn-primary btn-sm" @click="resetForm()"
-        >Limpiar</b-button
-      >
+      <b-button
+              class="mr-2 mb-2"
+              variant="primary"
+              type="submit"
+              >Agregar jugador
+      </b-button>
+      <b-button
+              class="mr-2 mb-2"
+              variant="secondary"
+              type="submit"
+              @click="resetForm()"
+              >Limpiar
+      </b-button>
     </b-form>
   </div>
 </template>

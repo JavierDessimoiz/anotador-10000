@@ -7,7 +7,7 @@
         <!-- <div v-if="comienzaElJuego === false"> -->
         <b-button
           type="button"
-          class="btn btn-default"
+          class="mb-2 mt-2"
           variant="success"
           v-on:click="verificaComienzo"
         >

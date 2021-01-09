@@ -21,45 +21,62 @@
               v-model="puntosum"
               type="number"
               :state="puntosState"
-              required
               size="lg"
-  
+              required
             ></b-form-input>
           </b-form-group>
         </form>
 
         <div class="row">
           <div class="col">
-            <button class="btn btn-outline-primary" v-on:click="sumar(50)">
+            <b-button
+              class="mt-2"
+              variant="outline-primary"
+              v-on:click="sumar(50)">
               +50
-            </button>
+            </b-button>
           </div>
           <div class="col">
-            <button class="btn btn-outline-primary" v-on:click="sumar(100)">
+             <b-button
+              class="mt-2"
+              variant="outline-primary"
+              v-on:click="sumar(100)">
               +100
-            </button>
+            </b-button>
           </div>
           <div class="col">
-            <button class="btn btn-outline-primary" v-on:click="sumar(200)">
+             <b-button
+              class="mt-2"
+              variant="outline-primary"
+              v-on:click="sumar(200)">
               +200
-            </button>
+            </b-button>
           </div>
         </div>
         <div class="row">
           <div class="col">
-            <button class="btn btn-outline-primary" v-on:click="sumar(300)">
+             <b-button
+              class="mt-2"
+              variant="outline-primary"
+              v-on:click="sumar(300)">
               +300
-            </button>
+            </b-button>
           </div>
           <div class="col">
-            <button class="btn btn-outline-primary" v-on:click="sumar(500)">
+             <b-button
+              class="mt-2"
+              variant="outline-primary"
+              v-on:click="sumar(500)">
               +500
-            </button>
+            </b-button>
           </div>
           <div class="col">
-            <button class="btn btn-outline-primary" v-on:click="sumar(1000)">
+             <b-button
+              class="mt-2"
+              variant="outline-primary"
+              v-on:click="sumar(1000)">
               +1000
-            </button>
+            </b-button>
           </div>
         </div>
 

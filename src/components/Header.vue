@@ -36,6 +36,7 @@
               block
               variant="primary"
               size="sm"
+              class="mt-1"
               >Nuevo juego</b-button
             >
           </div>
@@ -45,6 +46,7 @@
               block
               variant="primary"
               size="sm"
+              class="mt-1"
               >Mostrar posiciones
             </b-button>
           </div>
@@ -54,6 +56,7 @@
               v-b-toggle="['collapse-menu', 'collapse-parciales']"
               variant="primary"
               size="sm"
+              class="mt-1"
               aria-expanded="true"
               >Mostrar parciales
             </b-button>
@@ -66,11 +69,17 @@
               variant="primary"
               size="sm"
               aria-expanded="true"
+              class="mt-1"
               >Gráfico posiciones
             </b-button>
           </div>
           <div class="row">
-            <b-button v-b-toggle.collapse-menu block variant="primary" size="sm"
+            <b-button 
+            v-b-toggle.collapse-menu 
+            block 
+            variant="primary" 
+            size="sm"
+            class="mt-1"
               >Instrucciones
             </b-button>
           </div>
