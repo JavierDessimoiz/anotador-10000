@@ -2,7 +2,6 @@
   <div class="container-fluid">
     <b-form @submit.stop.prevent="onSubmit">
       <b-form-group id=" input-group-1" label-for=" input-1">
-        
         <!--<b-form-input
           id="nombre"
           name="nombre"
@@ -13,31 +12,30 @@
           placeholder="Nombre del jugador"
         ></b-form-input>-->
 
-         <input
+        <input
           id="nombre"
           name="nombre"
           type="text"
           v-model="jugadorInicializado.nombre"
           placeholder="Nombre del jugador"
-        >
+        />
 
         <b-form-invalid-feedback id="input-1-live-feedback"
           >Nombre requerido con un mínimo de 3 caracteres
           .</b-form-invalid-feedback
         >
       </b-form-group>
-      <b-button
-              class="mr-2 mb-2"
-              variant="primary"
-              type="submit"
-              >Agregar jugador
+      <b-button class="mr-2 mb-2" variant="primary" type="submit">
+        
+        Agregar jugador
+
       </b-button>
       <b-button
-              class="mr-2 mb-2"
-              variant="secondary"
-              type="submit"
-              @click="resetForm()"
-              >Limpiar
+        class="mr-2 mb-2"
+        variant="secondary"
+        type="submit"
+        @click="resetForm()"
+        >Limpiar
       </b-button>
     </b-form>
   </div>
@@ -53,12 +51,11 @@ export default {
     return {
       jugadorInicializado: {
         nombre: null,
-        puntos: 0,
+        puntos: 0
       }
     };
   },
   validations: {
-    
     jugadorInicializado: {
       nombre: {
         required,

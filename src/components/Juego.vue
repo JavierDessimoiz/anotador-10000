@@ -1,8 +1,14 @@
 <template>
   <div class="container-fluid">
-    <Header titulo="Diez mil" @nuevoJuego="nuevoJuego" @genChart="genChart" />
+    <Header
+      titulo="Diez mil"
+      @nuevoJuego="nuevoJuego"
+      @genChart="genChart"
+      @deshacerUltimoPuntaje="deshacerUltimoPuntaje"
+    />
+
     <!-- Comienzo -->
-    <b-collapse id="collapse-agregar" v-model="this.ingresaJugadores">
+    <b-collapse id="collapse-agregar" v-model="ingresaJugadores">
       <div class="container-fluid">
         <!-- <div v-if="comienzaElJuego === false"> -->
         <b-button
@@ -12,12 +18,20 @@
           v-on:click="verificaComienzo"
         >
           Comenzar
+          <b-icon
+            icon="play-fill"
+            aria-hidden="true"
+            scale="1"
+            color="white"
+            title="Agregar"
+          ></b-icon>
         </b-button>
+
         <CrearJugador @agregaJugador="agregaJugador" />
       </div>
     </b-collapse>
 
-    <b-collapse v-model="this.finDelJuego" id="collapse-ganador">
+    <b-collapse v-model="finDelJuego" id="collapse-ganador">
       <b-card>
         <h3>
           <strong> Ganó {{ this.primerPuesto() }} </strong>
@@ -34,7 +48,7 @@
     </b-collapse>
 
     <b-sidebar id="sidebar-right" left shadow>
-      <b-row class="shadow p-3 mb-2 bg-light rounded justify-content-center"
+      <b-row class="shadow p-3 mb-1 bg-light rounded justify-content-center"
         ><strong>POSICIONES</strong></b-row
       >
       <div class="px-3 py-2" v-if="HistPosiciones.length > 1">
@@ -74,7 +88,7 @@
       <div class="row">
         <div class="col" v-for="(jugador, index) in jugadores" :key="index">
           <div class="container-fluid">
-            <div v-if="ingresaJugadores === true">
+            <div v-if="ingresaJugadores">
               <div class="col" style="background: #fff;">
                 <b-button
                   variant="outline-primary"
@@ -137,7 +151,7 @@
                 :key="index"
               >
                 <div
-                  class="shadow p-1 mb-1 bg-white rounded justify-content-center"
+                  class="shadow-lg p-1 bg-white rounded justify-content-center"
                 >
                   <h6>{{ LineaPunto }}</h6>
                 </div>
@@ -152,6 +166,34 @@
         <canvas id="posChart"></canvas>
       </div>
     </b-collapse>
+    <b-modal id="instrucciones-scrollable" scrollable title="Instrucciones">
+      <p class="my-4">
+        <strong>Como se juega?</strong>
+      </p>
+
+      <p>
+        Para entrar al juego es necesario sacar como mínimo 750 puntos. El
+        jugador en su turno tira 5 dados, tratando de que salgan UNOS (cada uno
+        vale 100 puntos), CINCOS (cada uno vale 50 puntos), y/o tres dados
+        iguales (valen 100 veces el número que sale, por ejemplo: 2-2-2= 200,
+        etc. excepto si salen 1-1-1 que en ese caso valen 1000) Un tiro de
+        1-2-3-4-5 o 2-3-4-5-6 es un tiro especial que vale 500 puntos.
+      </p>
+
+      <p>
+        Un jugador después de contar los puntos, puede terminar y agregar todos
+        los puntos de ese turno a su puntaje total, o tirar otra vez usando los
+        dados que no sumen, tratando de hacer puntos adicionales, el turno del
+        jugador finaliza cuando hace un tiro sin conbinaciones que den puntos.
+        En caso de no realizar un tiro que no sume puntaje en su turno no sumará
+        puntos. Una vez que suma los puntos iniciales para ingresar al juego
+        (750) en los turnos siguientes sumará los puntos que consiga, no es
+        necesario sumar un mínimo de 750.
+      </p>
+
+      <strong>Final del juego.</strong>
+      <p>El primer jugador que llegue a los 10.000 exactos será el ganador.</p>
+    </b-modal>
   </div>
 </template>
 <script>
@@ -167,18 +209,27 @@ export default {
     return {
       //array de jugadores
       jugadores: [],
-      comienzaElJuego: Boolean,
-      ingresaJugadores: Boolean,
-      finDelJuego: Boolean,
+      comienzaElJuego: false,
+      ingresaJugadores: true,
+      finDelJuego: false,
       HistPosiciones: [{ jugadorPos: [] }],
-      //HistPosiciones: Array,
       confirmaNuevo: "",
-      confirmaEliminar: ""
+      confirmaEliminar: "",
+      ultimoJugadorEnSumar: "",
+      ultimosPuntosSumados: 0
     };
   },
 
   methods: {
     agregaJugador: function(jugadorInicializado) {
+      if (this.jugadores.length === 8) {
+        this.makeToast(
+          "danger",
+          "Error",
+          "El máximo número de jugadores es 8."
+        );
+      }
+      else {
       const existe =
         this.jugadores.filter(
           jugador =>
@@ -202,7 +253,7 @@ export default {
           jugadorInicializado.nombre + " ya ha sido agregado."
         );
       }
-    },
+    }},
     agregarHistorialPosiciones: function() {
       var jugOrd = this.jugadoresOrdenadoPosicion;
       var posiciones = [];
@@ -228,6 +279,14 @@ export default {
       this.saveLocalStorageHistorial();
     },
     controlarPuntaje: function(jugador, index) {
+      if (jugador.puntos === this.jugadores[index].puntosParcilales[this.jugadores[index].puntosParcilales.length - 1]){
+        this.makeToast(
+          "danger",
+          "Error",
+          " No se ingresaron puntos para " + this.jugadores[index].nombre + ". Por favor ingresar un puntaje.",  
+        );
+      }
+      else {
       //se verifica el ingreso minimo al juego con 750 puntos
       if (
         this.jugadores[index].puntosParcilales.length === 0 &&
@@ -267,7 +326,23 @@ export default {
 
           //agrega al historial de posiciones
           this.agregarHistorialPosiciones();
-          
+
+          //Notificaión restan pocos puntos
+          if (
+            Number(this.jugadores[index].puntos) < Number(10000) &&
+            Number(10000) - Number(this.jugadores[index].puntos) <= Number(1000)
+          ) {
+            this.makeToast(
+              "Info",
+              "Info",
+              "A " +
+                this.jugadores[index].nombre +
+                " solo le restan " +
+                (Number(10000) - Number(this.jugadores[index].puntos)) +
+                " puntos para ganar."
+            );
+          }
+
           //Notificación de cambio de posición
           if (this.HistPosiciones.length > 2) {
             var posAct = this.HistPosiciones[
@@ -297,17 +372,38 @@ export default {
           this.jugadores[index].puntosParcilales.push(jugador.puntos);
           this.saveLocalStorageJugadores();
           this.genChart();
+          //guarda el ultimo puntaje sumado junto con su nombre en caso de querer deshacer
+          if (this.jugadores[index].puntosParcilales.length > 1) {
+            var dif =
+              this.jugadores[index].puntosParcilales[
+                this.jugadores[index].puntosParcilales.length - 1
+              ] -
+              this.jugadores[index].puntosParcilales[
+                this.jugadores[index].puntosParcilales.length - 2
+              ];
+          } else {
+            if (this.jugadores[index].puntosParcilales.length == 1) {
+              dif = this.jugadores[index].puntosParcilales[
+                this.jugadores[index].puntosParcilales.length - 1
+              ];
+            } else {
+              dif = 0;
+            }
+          }
+          this.ultimoJugadorEnSumar = jugador.nombre;
+          this.ultimosPuntosSumados = dif;
+          this.saveLocalStorageHistorial();
           //controla el ganador
           if (jugador.puntos === Number(10000)) {
             this.finDelJuego = true;
             this.comienzaElJuego = false;
-            //this.cargaJugadores = false;
             this.ingresaJugadores = false;
+
             this.gardarVariablesControlLocalStorage();
           }
         }
       }
-    },
+    }},
     makeToast(variant = null, titulo, mensaje) {
       this.$bvToast.toast(mensaje, {
         title: titulo,
@@ -359,6 +455,9 @@ export default {
             this.comienzaElJuego = false;
             this.ingresaJugadores = true;
             this.finDelJuego = false;
+            this.ultimoJugadorEnSumar = "";
+            this.ultimosPuntosSumados = 0;
+            this.gardarVariablesControlLocalStorage();
             this.HistPosiciones.splice(0, this.HistPosiciones.length);
             this.saveLocalStorageHistorial();
             this.genChart();
@@ -396,12 +495,15 @@ export default {
     },
     posiconesPorJugador: function(nombre) {
       var posicJuga = [];
-      for (var i = 1; i < this.HistPosiciones.length; i++) {
-        posicJuga.push(
-          Number(
-            this.HistPosiciones[i].find(jug => jug.nombre === nombre).posicion
-          )
-        );
+      var posicion = 1;
+
+      for (var i = 0; i < this.HistPosiciones.length; i++) {
+        for (var j = 0; j < this.HistPosiciones[i].length; j++) {
+          if (this.HistPosiciones[i][j].nombre == nombre) {
+            posicion = this.HistPosiciones[i][j].posicion;
+          }
+        }
+        posicJuga.push(Number(posicion));
       }
       return posicJuga;
     },
@@ -422,19 +524,21 @@ export default {
       return ejex;
     },
 
-    getBorderColor(i) {
+    getBorderColor: function(i) {
       var borderColors = [
         "rgba(255,99,132,1)",
         "rgba(54, 162, 235, 1)",
         "rgba(255, 206, 86, 1)",
         "rgba(75, 192, 192, 1)",
-        "rgba(153, 102, 255, 1)",
-        "rgba(255, 159, 64, 1)"
+        "rgba(153, 50, 190, 1)",
+        "rgba(255, 159, 64, 1)",
+        "rgba(200, 99, 64, 1)",
+        "rgba(75, 100, 255, 1)"
       ];
       return borderColors[i];
     },
 
-    getBorderColorPorNombre(nombre) {
+    getBorderColorPorNombre: function(nombre) {
       var ind = 0;
       for (var i = 1; i < this.jugadores.length; i++) {
         if (this.jugadores[i].nombre === nombre) {
@@ -444,14 +548,16 @@ export default {
       return this.getBorderColor(ind);
     },
 
-    getBackgroundColor(i) {
+    getBackgroundColor: function(i) {
       var backgroundColors = [
-        "rgba(255, 99, 132, 0.2)",
+        "rgba(255,99,132,0.2)",
         "rgba(54, 162, 235, 0.2)",
         "rgba(255, 206, 86, 0.2)",
         "rgba(75, 192, 192, 0.2)",
-        "rgba(153, 102, 255, 0.2)",
-        "rgba(255, 159, 64, 0.2)"
+        "rgba(153, 50, 190, 0.2)",
+        "rgba(255, 159, 64, 0.2)",
+        "rgba(200, 99, 64, 0.2)",
+        "rgba(75, 100, 255, 0.2)"
       ];
       return backgroundColors[i];
     },
@@ -502,7 +608,7 @@ export default {
                   reverse: true,
                   steps: this.jugadores.length,
                   suggestedMin: 1,
-                  scaleSteps: 500,
+                  //scaleSteps: 500,
                   suggestedMax: this.jugadores.length,
                   scaleStartValue: 1,
                   stepSize: 1
@@ -513,7 +619,7 @@ export default {
               {
                 scaleLabel: {
                   display: true,
-                  labelString: "Turno",
+                  labelString: "Turnos",
                   fontSize: 14
                 }
               }
@@ -522,14 +628,19 @@ export default {
         }
       });
     },
+
     saveLocalStorageHistorial: function() {
       const parsed = JSON.stringify(this.HistPosiciones);
       localStorage.setItem("HistPosiciones", parsed);
+      localStorage.ultimoJugadorEnSumar = this.ultimoJugadorEnSumar;
+      localStorage.ultimosPuntosSumados = this.ultimosPuntosSumados;
     },
+
     saveLocalStorageJugadores: function() {
       const parsed = JSON.stringify(this.jugadores);
       localStorage.setItem("jugadores", parsed);
     },
+
     cargarNuevoJuegoJugadores: function() {
       if (localStorage.getItem("jugadores")) {
         try {
@@ -548,6 +659,7 @@ export default {
         ];
       }
     },
+
     CargarNuevoJuegoHistorial: function() {
       if (localStorage.getItem("HistPosiciones")) {
         try {
@@ -561,17 +673,88 @@ export default {
         this.comienzaElJuego = false;
         this.ingresaJugadores = true;
         this.finDelJuego = false;
+        this.ultimoJugadorEnSumar = "";
+        this.ultimosPuntosSumados = 0;
         this.gardarVariablesControlLocalStorage();
         this.HistPosiciones.splice(0, this.HistPosiciones.length);
         this.genChart();
       }
     },
+
     gardarVariablesControlLocalStorage: function() {
       localStorage.finDelJuego = this.finDelJuego;
       localStorage.comienzaElJuego = this.comienzaElJuego;
       localStorage.ingresaJugadores = this.ingresaJugadores;
+    },
+
+    deshacerUltimoPuntaje: function() {
+      this.confirmaEliminar = "";
+      if (this.ultimosPuntosSumados > 0 && this.finDelJuego === false) {
+        this.$bvModal
+          .msgBoxConfirm(
+            "¿Está seguro deshacer la ultima anotación? Se restarán " +
+              this.ultimosPuntosSumados +
+              " puntos a " +
+              this.ultimoJugadorEnSumar +
+              "."
+          )
+          .then(value => {
+            this.confirmaEliminar = value;
+            if (this.confirmaEliminar) {
+              //Borro del historial de posiciones el último movimiento
+              this.HistPosiciones.splice(this.HistPosiciones.length - 1);
+              //Busco el jugador al que hay que restarles los puntos
+              var ind = 0;
+              for (var i = 1; i < this.jugadores.length; i++) {
+                if (this.jugadores[i].nombre === this.ultimoJugadorEnSumar) {
+                  ind = i;
+                }
+              }
+
+              //Saco de parciales el último valor
+              if (this.ultimosPuntosSumados > 0) {
+                this.jugadores[ind].puntos =
+                  this.jugadores[ind].puntos - this.ultimosPuntosSumados;
+                this.jugadores[ind].puntosParcilales.splice(
+                  this.jugadores[ind].puntosParcilales.length - 1
+                );
+                this.makeToast(
+                  "Info",
+                  "Info",
+                  "Se borraron " +
+                    this.ultimosPuntosSumados +
+                    " puntos a " +
+                    this.jugadores[ind].nombre
+                );
+                this.ultimosPuntosSumados = 0;
+              }
+
+              this.saveLocalStorageHistorial();
+              this.genChart();
+            }
+          })
+          .catch(err => {
+            console.log(err + "error en deshacer");
+            // An error occurred
+          });
+      } else {
+        if (this.finDelJuego) {
+        this.makeToast(
+          "danger",
+          "Info",
+          "El juego ha finalizado"
+        )}
+        else {
+          this.makeToast(
+          "danger",
+          "Info",
+          "Solo se puede deshacer el último puntaje ingresado."
+        )
+        }
+      }
     }
   },
+
   computed: {
     jugadoresOrdenadoPosicion: function() {
       return this.jugadores.slice(0).sort(function(a, b) {
@@ -579,28 +762,40 @@ export default {
       });
     }
   },
+
   beforeMount() {
     this.cargarNuevoJuegoJugadores();
     this.CargarNuevoJuegoHistorial();
-    if (localStorage.comienzaElJuego) {
-      this.comienzaElJuego = localStorage.comienzaElJuego;
-    } else {
-      this.comienzaElJuego = false;
-    }
-    if (localStorage.ingresaJugadores) {
-      this.ingresaJugadores = localStorage.ingresaJugadores;
-    } else {
-      this.ingresaJugadores = true;
-    }
-    if (localStorage.finDelJuego) {
-      this.finDelJuego = localStorage.finDelJuego;
-    } else {
-      this.finDelJuego = false;
-    }
-    this.gardarVariablesControlLocalStorage();
-    this.genChart();
-  },
 
+    if (localStorage.comienzaElJuego) {
+      var cond = localStorage.getItem("comienzaElJuego");
+      cond = JSON.parse(cond);
+      this.comienzaElJuego = cond;
+    }
+
+    if (localStorage.ingresaJugadores) {
+      cond = localStorage.getItem("ingresaJugadores");
+      cond = JSON.parse(cond);
+      this.ingresaJugadores = cond;
+    }
+
+    if (localStorage.comienzaElJuego) {
+      cond = localStorage.getItem("finDelJuego");
+      cond = JSON.parse(cond);
+      this.finDelJuego = cond;
+    }
+    
+    if (localStorage.ultimoJugadorEnSumar) {
+      this.ultimoJugadorEnSumar = localStorage.ultimoJugadorEnSumar;
+    }
+
+    if (localStorage.ultimosPuntosSumados) {
+      this.ultimosPuntosSumados = localStorage.ultimosPuntosSumados;
+    }
+
+    this.gardarVariablesControlLocalStorage();
+    //this.genChart();
+  },
 
   components: {
     CrearJugador,

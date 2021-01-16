@@ -3,7 +3,6 @@
     <button type="button" class="btn btn-outline-primary btn-sm" @click="showModal">
       <b-icon icon="pencil-fill" variant="info"></b-icon
     ></button>
-   
 
     <b-modal ref="puntos-modal" hide-footer hide-header>
       <div class="col" style="text-align: center;">
@@ -16,6 +15,7 @@
             label-for="puntos-input"
             invalid-feedback="Ingrese los puntos"
           >
+            <div v-if= "false">
             <b-form-input
               id="puntos-input"
               v-model="puntosum"
@@ -23,7 +23,9 @@
               :state="puntosState"
               size="lg"
               required
-            ></b-form-input>
+            ></b-form-input>      
+            </div>
+            <h1 class="table-info" style="color: blue;">{{puntosum}}</h1>
           </b-form-group>
         </form>
 
@@ -112,12 +114,13 @@ export default {
   props: ["nombreJugador"],
   data() {
     return {
-      puntosum: null,
+      puntosum: 0,
       puntosState: null
     };
   },
+  
   created: function() {
-    this.puntosum = null;
+    this.puntosum = 0;
     this.puntosState = null;
   },
   methods: {
@@ -125,19 +128,19 @@ export default {
       this.puntosum = Number(this.puntosum) + Number(cantPuntos);
     },
     borrar() {
-      this.puntosum = null;
+      this.puntosum = 0;
       this.puntosState = null;
     },
     //modal ini
     showModal() {
-      this.puntosum = null;
+      this.puntosum = 0;
       this.puntosState = null;
       this.$refs["puntos-modal"].show();
     },
     hideModal() {
       if (this.validarPuntaje()) {
         this.$emit("controlarPuntaje", this.puntosum);
-        this.puntosum = null;
+        this.puntosum = 0;
         this.$refs["puntos-modal"].hide();
       }
     },

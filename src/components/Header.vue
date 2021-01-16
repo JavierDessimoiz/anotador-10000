@@ -42,6 +42,17 @@
           </div>
           <div class="row">
             <b-button
+              v-on:click="deshacerUltimoPuntaje"
+              v-b-toggle.collapse-menu
+              block
+              variant="primary"
+              size="sm"
+              class="mt-1"
+              >Deshacer puntaje</b-button
+            >
+          </div>
+          <div class="row">
+            <b-button
               v-b-toggle="['collapse-menu', 'sidebar-right']"
               block
               variant="primary"
@@ -57,7 +68,7 @@
               variant="primary"
               size="sm"
               class="mt-1"
-              aria-expanded="true"
+              aria-expanded= 'true'
               >Mostrar parciales
             </b-button>
           </div>
@@ -68,7 +79,7 @@
               v-on:click="genChart"
               variant="primary"
               size="sm"
-              aria-expanded="true"
+              aria-expanded= 'true'
               class="mt-1"
               >Gráfico posiciones
             </b-button>
@@ -76,6 +87,7 @@
           <div class="row">
             <b-button 
             v-b-toggle.collapse-menu 
+            v-b-modal.instrucciones-scrollable
             block 
             variant="primary" 
             size="sm"
@@ -103,6 +115,9 @@ export default {
     },
     genChart: function() {
       this.$emit("genChart");
+    },
+    deshacerUltimoPuntaje: function() {
+      this.$emit("deshacerUltimoPuntaje");
     }
   }
 };
