@@ -770,19 +770,25 @@ export default {
     if (localStorage.comienzaElJuego) {
       var cond = localStorage.getItem("comienzaElJuego");
       cond = JSON.parse(cond);
-      this.comienzaElJuego = cond;
+      this.comienzaElJuego = cond; 
+    } else {
+      this.comienzaElJuego= false;
     }
 
     if (localStorage.ingresaJugadores) {
       cond = localStorage.getItem("ingresaJugadores");
       cond = JSON.parse(cond);
       this.ingresaJugadores = cond;
+        } else {
+      this.ingresaJugadores= true;
     }
 
-    if (localStorage.comienzaElJuego) {
+    if (localStorage.finDelJuego) {
       cond = localStorage.getItem("finDelJuego");
       cond = JSON.parse(cond);
       this.finDelJuego = cond;
+        } else {
+      this.finDelJuego= false;
     }
     
     if (localStorage.ultimoJugadorEnSumar) {
