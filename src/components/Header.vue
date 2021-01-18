@@ -95,6 +95,30 @@
               >Instrucciones
             </b-button>
           </div>
+          <div class="row">
+            <b-button 
+            v-b-toggle.collapse-menu 
+            block 
+            variant="primary" 
+            size="sm"
+            class="mt-1"
+             href="https://github.com/JavierDessimoiz/anotador-10000" 
+             target="_blank"
+              > GitHub
+            </b-button>
+          </div>
+           <div class="row">
+            <b-button 
+            v-b-toggle.collapse-menu 
+            block 
+            variant="primary" 
+            size="sm"
+            class="mt-1"
+             href="https://www.linkedin.com/in/javierdessimoiz/" 
+             target="_blank"
+              > Linkedin
+            </b-button>
+          </div>
         </b-collapse>
       </div>
     </div>

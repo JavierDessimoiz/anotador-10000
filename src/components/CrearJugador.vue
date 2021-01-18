@@ -1,52 +1,34 @@
 <template>
   <div class="container-fluid">
-    <b-form @submit.stop.prevent="onSubmit">
-      <b-form-group id=" input-group-1" label-for=" input-1">
-        <!--<b-form-input
-          id="nombre"
-          name="nombre"
-          type="text"
-          v-model="$v.jugadorInicializado.nombre.$model"
-          :state="validateState('nombre')"
-          aria-describedby="input-1-live-feedback"
-          placeholder="Nombre del jugador"
-        ></b-form-input>-->
-
-        <input
-          id="nombre"
-          name="nombre"
-          type="text"
-          v-model="jugadorInicializado.nombre"
-          placeholder="Nombre del jugador"
-        />
-
-        <b-form-invalid-feedback id="input-1-live-feedback"
-          >Nombre requerido con un mínimo de 3 caracteres
-          .</b-form-invalid-feedback
-        >
-      </b-form-group>
-      <b-button class="mr-2 mb-2" variant="primary" type="submit">
-        
-        Agregar jugador
-
-      </b-button>
-      <b-button
-        class="mr-2 mb-2"
-        variant="secondary"
-        type="submit"
-        @click="resetForm()"
-        >Limpiar
-      </b-button>
-    </b-form>
+    <div class="row justify-content-center">
+      <input style="text-align:center;"
+        id="nombre"
+        name="nombre"
+        type="text"
+        v-model="jugadorInicializado.nombre"
+        placeholder="Nombre del jugador"
+      />
+    </div>
+    <b-button
+      class="mr-2 mb-2 mt-2"
+      variant="primary"
+      type="submit"
+      @click="agregarJugador()"
+    >
+      Agregar jugador
+    </b-button>
+    <b-button
+      class="mr-2 mb-2 mt-2"
+      variant="secondary"
+      type="submit"
+      @click="resetForm()"
+      >Limpiar
+    </b-button>
   </div>
 </template>
 
 <script>
-import { validationMixin } from "vuelidate";
-import { required, minLength } from "vuelidate/lib/validators";
-
 export default {
-  mixins: [validationMixin],
   data() {
     return {
       jugadorInicializado: {
@@ -55,39 +37,18 @@ export default {
       }
     };
   },
-  validations: {
-    jugadorInicializado: {
-      nombre: {
-        required,
-        minLength: minLength(3)
-      }
-    }
-  },
+
   methods: {
     agregarJugador() {
       this.$emit("agregaJugador", this.jugadorInicializado);
       this.jugadorInicializado.nombre = null;
     },
-    validateState(nombre) {
-      const { $dirty, $error } = this.$v.jugadorInicializado[nombre];
-      return $dirty ? !$error : null;
-    },
+
     resetForm() {
       this.jugadorInicializado = {
         nombre: null,
         puntos: 0
       };
-
-      this.$nextTick(() => {
-        this.$v.$reset();
-      });
-    },
-    onSubmit() {
-      this.$v.jugadorInicializado.$touch();
-      if (this.$v.jugadorInicializado.$anyError) {
-        return;
-      }
-      this.agregarJugador();
     }
   }
 };
