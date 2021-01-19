@@ -95,7 +95,7 @@
 
           <div class="col">
             <b-button
-              class="mt-3"
+              class="mt-3 ml-1"
               variant="outline-success"
               block
               @click="hideModal()"
